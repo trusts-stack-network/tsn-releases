@@ -19,7 +19,7 @@ notice.
 | Network | `tsn-devnet-v2-gen4` |
 | Chain ID | `28ee68e414994c39` |
 | Genesis | `15285cf55964230efe13450bc520bd46bc023469e4d207f91d22daaa56fbef78` |
-| Current release | `v3.0.0-rc.10` |
+| Current release | `v3.0.0-rc.11` |
 | Block time | ~10 seconds |
 
 ---
@@ -44,7 +44,7 @@ sha256sum tsn-linux-x86_64
 Expected:
 
 ```
-e2481f74d030528b0ccff502d18f4876c4d5c26f0da7905f58fc051e7e102c89
+bde2714461f86d40a7e4b4068bed80a5580c2a6c6e8c50530ccdc2635ed2ef73
 ```
 
 Do not run the binary if the checksum does not match.
