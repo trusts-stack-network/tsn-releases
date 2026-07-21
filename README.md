@@ -19,7 +19,7 @@ notice.
 | Network | `tsn-devnet-v2-gen4` |
 | Chain ID | `28ee68e414994c39` |
 | Genesis | `15285cf55964230efe13450bc520bd46bc023469e4d207f91d22daaa56fbef78` |
-| Current release | `v3.0.0-rc.12` |
+| Current release | `v3.0.0-rc.13` |
 | Block time | ~10 seconds |
 
 ---
@@ -44,7 +44,7 @@ sha256sum tsn-linux-x86_64
 Expected:
 
 ```
-e585bcd8761fde86202a2da6468e2b565315aa173315fd02cc9dc0e3e7e53530
+26b9c99cd5d27636670d128564215ee4e0f747a85f0229f76d82269b7d1bf8f8
 ```
 
 Do not run the binary if the checksum does not match.
@@ -174,23 +174,32 @@ Mining is CPU-based. Use `-t <N>` to set the number of threads.
 
 ---
 
-## Claim your rewards
+## Your wallet and rewards
 
-Block rewards are credited to your `pk_hash` and must be claimed **per block**.
-You need the height of a block you mined — `blocks_mined` in `/health` tells you
-how many you won, and the miner logs the height of each one.
+Check your balance at any time (it finds your local node by itself):
+
+```bash
+./tsn-linux-x86_64 balance --wallet ./wallet.json
+```
+
+Or use the interactive menu:
+
+```bash
+./tsn-linux-x86_64 wallet
+```
+
+Block rewards are credited to your `pk_hash` and claimed **per block**:
 
 ```bash
 ./tsn-linux-x86_64 claim-coinbase --block <HEIGHT> --wallet ./wallet.json
 ```
 
-Check your balance (point it at your own miner, or at the public indexer):
+### Mining from several machines
 
-```bash
-./tsn-linux-x86_64 balance --wallet ./wallet.json --node http://127.0.0.1:18546
-```
-
-`--block` is required — a bare `claim-coinbase --wallet ...` will fail.
+Use **the same `--miner-pk-hash` on every machine** — all rewards then go to the
+same wallet. The pk_hash is only a destination address, not a secret, so it is
+safe to reuse. Each machine needs its own `--data-dir`; keep the `wallet.json`
+itself on one machine only.
 
 ---
 
