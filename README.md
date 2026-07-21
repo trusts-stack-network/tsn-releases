@@ -56,6 +56,19 @@ chmod +x tsn-linux-x86_64
 
 ---
 
+## ⚠️ Known issues (2026-07-21)
+
+This release has two confirmed limitations. Both are being fixed.
+
+- **Use the `/ip4/` peer addresses exactly as written below.** DNS peer
+  addresses (`/dns4/...`) are accepted on the command line but the transport
+  cannot resolve them, leaving the node with no p2p connection.
+- **Mining from a fresh node does not work yet.** A newly started `miner-v2`
+  stops syncing at height 3099 and never begins producing. Running a
+  `service-node` works. Do not start mining from scratch until this is fixed.
+
+---
+
 ## ⚠️ Use the DevnetV2 commands
 
 The binary still ships legacy commands that target a **retired network**. They
@@ -80,11 +93,11 @@ not mine and needs no wallet.
   --port 9437 \
   --bind 127.0.0.1 \
   --data-dir ./data \
-  --peer /dns4/seed1.tsnchain.com/tcp/9433 \
-  --peer /dns4/seed2.tsnchain.com/tcp/9433 \
-  --peer /dns4/seed3.tsnchain.com/tcp/9433 \
-  --peer /dns4/seed4.tsnchain.com/tcp/9433 \
-  --peer /dns4/nexus.tsnchain.com/tcp/9433
+  --peer /ip4/151.240.19.253/tcp/9433 \
+  --peer /ip4/45.145.164.76/tcp/9433 \
+  --peer /ip4/146.19.168.71/tcp/9433 \
+  --peer /ip4/45.132.96.141/tcp/9433 \
+  --peer /ip4/45.145.165.223/tcp/9433
 ```
 
 The node syncs the full chain from genesis. This takes about 10 minutes.
@@ -137,11 +150,11 @@ Replace `<YOUR_PK_HASH>` with the value from step 1.
   --p2p-port 19434 \
   --data-dir ./miner-data \
   --miner-pk-hash <YOUR_PK_HASH> \
-  --peer /dns4/seed1.tsnchain.com/tcp/9433 \
-  --peer /dns4/seed2.tsnchain.com/tcp/9433 \
-  --peer /dns4/seed3.tsnchain.com/tcp/9433 \
-  --peer /dns4/seed4.tsnchain.com/tcp/9433 \
-  --peer /dns4/nexus.tsnchain.com/tcp/9433
+  --peer /ip4/151.240.19.253/tcp/9433 \
+  --peer /ip4/45.145.164.76/tcp/9433 \
+  --peer /ip4/146.19.168.71/tcp/9433 \
+  --peer /ip4/45.132.96.141/tcp/9433 \
+  --peer /ip4/45.145.165.223/tcp/9433
 ```
 
 The miner first syncs the chain, then waits until it is connected to the gossip
