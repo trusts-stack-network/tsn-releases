@@ -44,7 +44,7 @@ sha256sum tsn-linux-x86_64
 Expected:
 
 ```
-d081d34b0bd8a3a3975ca91f78ef85dfff7fd2236af847081fc853c9fce87d67
+e2481f74d030528b0ccff502d18f4876c4d5c26f0da7905f58fc051e7e102c89
 ```
 
 Do not run the binary if the checksum does not match.
@@ -87,9 +87,10 @@ not mine and needs no wallet.
   --peer /dns4/nexus.tsnchain.com/tcp/9433
 ```
 
-The node syncs the full chain from genesis. Expect roughly 10 minutes for a
-service-node. A miner syncs block-by-block and is considerably slower — start a
-`service-node` first if you only want to follow the chain.
+On first start the node bootstraps from the latest signed snapshot instead of
+replaying the chain, so it is caught up within a few minutes. The snapshot is
+verified against the network's signing keys and its published checksum; if
+anything fails it falls back to a normal sync.
 
 Check its status at any time:
 
