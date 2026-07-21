@@ -19,7 +19,7 @@ notice.
 | Network | `tsn-devnet-v2-gen4` |
 | Chain ID | `28ee68e414994c39` |
 | Genesis | `15285cf55964230efe13450bc520bd46bc023469e4d207f91d22daaa56fbef78` |
-| Current release | `v3.0.0-rc.11` |
+| Current release | `v3.0.0-rc.12` |
 | Block time | ~10 seconds |
 
 ---
@@ -44,7 +44,7 @@ sha256sum tsn-linux-x86_64
 Expected:
 
 ```
-bde2714461f86d40a7e4b4068bed80a5580c2a6c6e8c50530ccdc2635ed2ef73
+e585bcd8761fde86202a2da6468e2b565315aa173315fd02cc9dc0e3e7e53530
 ```
 
 Do not run the binary if the checksum does not match.
@@ -76,16 +76,12 @@ A node follows the chain, stores blocks and relays them to other peers. It does
 not mine and needs no wallet.
 
 ```bash
-./tsn-linux-x86_64 service-node \
-  --port 9437 \
-  --bind 127.0.0.1 \
-  --data-dir ./data \
-  --peer /dns4/seed1.tsnchain.com/tcp/9433 \
-  --peer /dns4/seed2.tsnchain.com/tcp/9433 \
-  --peer /dns4/seed3.tsnchain.com/tcp/9433 \
-  --peer /dns4/seed4.tsnchain.com/tcp/9433 \
-  --peer /dns4/nexus.tsnchain.com/tcp/9433
+./tsn-linux-x86_64 service-node --data-dir ./tsn-data
 ```
+
+That is the whole command — the node dials the network's seeds on its own. Pass
+`--peer /dns4/seed1.tsnchain.com/tcp/9433` (repeatable) only if you want to
+target specific peers.
 
 On first start the node bootstraps from the latest signed snapshot instead of
 replaying the chain, so it is caught up within a few minutes. The snapshot is
@@ -134,19 +130,10 @@ Keep `wallet.json` safe and private (it is created with `0600` permissions).
 Replace `<YOUR_PK_HASH>` with the value from step 1.
 
 ```bash
-./tsn-linux-x86_64 miner-v2 \
-  --port 18546 \
-  --bind 127.0.0.1 \
-  --p2p-bind 127.0.0.1 \
-  --p2p-port 19434 \
-  --data-dir ./miner-data \
-  --miner-pk-hash <YOUR_PK_HASH> \
-  --peer /dns4/seed1.tsnchain.com/tcp/9433 \
-  --peer /dns4/seed2.tsnchain.com/tcp/9433 \
-  --peer /dns4/seed3.tsnchain.com/tcp/9433 \
-  --peer /dns4/seed4.tsnchain.com/tcp/9433 \
-  --peer /dns4/nexus.tsnchain.com/tcp/9433
+./tsn-linux-x86_64 miner-v2 --data-dir ./miner-data --miner-pk-hash <YOUR_PK_HASH>
 ```
+
+No `--peer` needed: the miner connects to the network by itself.
 
 The miner first syncs the chain, then waits until it is connected to the gossip
 mesh before producing its first block. This is intentional: it prevents mining
