@@ -44,7 +44,7 @@ sha256sum tsn-linux-x86_64
 Expected:
 
 ```
-ec8477b69b360d879d5461de60bbbb69df1853afe167611da656cc67b3a4efd9
+c726fa20a44d2e50fdac8eeaf6abfbf886e33662cb1f2d001b431a66152ecd11
 ```
 
 Do not run the binary if the checksum does not match.
