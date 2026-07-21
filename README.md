@@ -44,7 +44,7 @@ sha256sum tsn-linux-x86_64
 Expected:
 
 ```
-b336493a4b5ea80f39cad15593533b3080c90d0b1c7449150165952bc2bb8729
+d081d34b0bd8a3a3975ca91f78ef85dfff7fd2236af847081fc853c9fce87d67
 ```
 
 Do not run the binary if the checksum does not match.
@@ -53,19 +53,6 @@ Do not run the binary if the checksum does not match.
 chmod +x tsn-linux-x86_64
 ./tsn-linux-x86_64 --version
 ```
-
----
-
-## ⚠️ Known issues (2026-07-21)
-
-This release has two confirmed limitations. Both are being fixed.
-
-- **Use the `/ip4/` peer addresses exactly as written below.** DNS peer
-  addresses (`/dns4/...`) are accepted on the command line but the transport
-  cannot resolve them, leaving the node with no p2p connection.
-- **Mining from a fresh node does not work yet.** A newly started `miner-v2`
-  stops syncing at height 3099 and never begins producing. Running a
-  `service-node` works. Do not start mining from scratch until this is fixed.
 
 ---
 
@@ -93,14 +80,16 @@ not mine and needs no wallet.
   --port 9437 \
   --bind 127.0.0.1 \
   --data-dir ./data \
-  --peer /ip4/151.240.19.253/tcp/9433 \
-  --peer /ip4/45.145.164.76/tcp/9433 \
-  --peer /ip4/146.19.168.71/tcp/9433 \
-  --peer /ip4/45.132.96.141/tcp/9433 \
-  --peer /ip4/45.145.165.223/tcp/9433
+  --peer /dns4/seed1.tsnchain.com/tcp/9433 \
+  --peer /dns4/seed2.tsnchain.com/tcp/9433 \
+  --peer /dns4/seed3.tsnchain.com/tcp/9433 \
+  --peer /dns4/seed4.tsnchain.com/tcp/9433 \
+  --peer /dns4/nexus.tsnchain.com/tcp/9433
 ```
 
-The node syncs the full chain from genesis. This takes about 10 minutes.
+The node syncs the full chain from genesis. Expect roughly 10 minutes for a
+service-node. A miner syncs block-by-block and is considerably slower — start a
+`service-node` first if you only want to follow the chain.
 
 Check its status at any time:
 
@@ -108,8 +97,9 @@ Check its status at any time:
 curl -s http://127.0.0.1:9437/health
 ```
 
-You are fully synced when `tip_height` matches the network and
-`p2p_peers_accepted` is 5.
+You are fully synced when `tip_height` matches the network (compare with
+https://explorer.tsnchain.com). Note that `p2p_peers_accepted` is a cumulative
+counter of accepted handshakes, not the number of live connections.
 
 ### Running behind NAT
 
@@ -150,11 +140,11 @@ Replace `<YOUR_PK_HASH>` with the value from step 1.
   --p2p-port 19434 \
   --data-dir ./miner-data \
   --miner-pk-hash <YOUR_PK_HASH> \
-  --peer /ip4/151.240.19.253/tcp/9433 \
-  --peer /ip4/45.145.164.76/tcp/9433 \
-  --peer /ip4/146.19.168.71/tcp/9433 \
-  --peer /ip4/45.132.96.141/tcp/9433 \
-  --peer /ip4/45.145.165.223/tcp/9433
+  --peer /dns4/seed1.tsnchain.com/tcp/9433 \
+  --peer /dns4/seed2.tsnchain.com/tcp/9433 \
+  --peer /dns4/seed3.tsnchain.com/tcp/9433 \
+  --peer /dns4/seed4.tsnchain.com/tcp/9433 \
+  --peer /dns4/nexus.tsnchain.com/tcp/9433
 ```
 
 The miner first syncs the chain, then waits until it is connected to the gossip
@@ -190,7 +180,7 @@ the seed addresses is not blocked.
 **Sync appears stuck at height 0 for several minutes**
 
 Normal: the node opens and validates its database before serving HTTP. Full sync
-from genesis takes about 10 minutes.
+from genesis takes several minutes before the height starts moving.
 
 Mining is CPU-based. Use `-t <N>` to set the number of threads.
 
@@ -198,12 +188,21 @@ Mining is CPU-based. Use `-t <N>` to set the number of threads.
 
 ## Claim your rewards
 
-Mined block rewards are credited to your `pk_hash` and must be claimed:
+Block rewards are credited to your `pk_hash` and must be claimed **per block**.
+You need the height of a block you mined — `blocks_mined` in `/health` tells you
+how many you won, and the miner logs the height of each one.
 
 ```bash
-./tsn-linux-x86_64 claim-coinbase --wallet ./wallet.json
-./tsn-linux-x86_64 balance --wallet ./wallet.json
+./tsn-linux-x86_64 claim-coinbase --block <HEIGHT> --wallet ./wallet.json
 ```
+
+Check your balance (point it at your own miner, or at the public indexer):
+
+```bash
+./tsn-linux-x86_64 balance --wallet ./wallet.json --node http://127.0.0.1:18546
+```
+
+`--block` is required — a bare `claim-coinbase --wallet ...` will fail.
 
 ---
 
