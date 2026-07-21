@@ -80,11 +80,11 @@ not mine and needs no wallet.
   --port 9437 \
   --bind 127.0.0.1 \
   --data-dir ./data \
-  --peer /ip4/151.240.19.253/tcp/9433 \
-  --peer /ip4/45.145.164.76/tcp/9433 \
-  --peer /ip4/146.19.168.71/tcp/9433 \
-  --peer /ip4/45.132.96.141/tcp/9433 \
-  --peer /ip4/45.145.165.223/tcp/9433
+  --peer /dns4/seed1.tsnchain.com/tcp/9433 \
+  --peer /dns4/seed2.tsnchain.com/tcp/9433 \
+  --peer /dns4/seed3.tsnchain.com/tcp/9433 \
+  --peer /dns4/seed4.tsnchain.com/tcp/9433 \
+  --peer /dns4/nexus.tsnchain.com/tcp/9433
 ```
 
 The node syncs the full chain from genesis. This takes about 10 minutes.
@@ -137,11 +137,11 @@ Replace `<YOUR_PK_HASH>` with the value from step 1.
   --p2p-port 19434 \
   --data-dir ./miner-data \
   --miner-pk-hash <YOUR_PK_HASH> \
-  --peer /ip4/151.240.19.253/tcp/9433 \
-  --peer /ip4/45.145.164.76/tcp/9433 \
-  --peer /ip4/146.19.168.71/tcp/9433 \
-  --peer /ip4/45.132.96.141/tcp/9433 \
-  --peer /ip4/45.145.165.223/tcp/9433
+  --peer /dns4/seed1.tsnchain.com/tcp/9433 \
+  --peer /dns4/seed2.tsnchain.com/tcp/9433 \
+  --peer /dns4/seed3.tsnchain.com/tcp/9433 \
+  --peer /dns4/seed4.tsnchain.com/tcp/9433 \
+  --peer /dns4/nexus.tsnchain.com/tcp/9433
 ```
 
 The miner first syncs the chain, then waits until it is connected to the gossip
