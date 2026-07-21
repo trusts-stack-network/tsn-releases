@@ -56,6 +56,20 @@ chmod +x tsn-linux-x86_64
 
 ---
 
+## ⚠️ Use the DevnetV2 commands
+
+The binary still ships legacy commands that target a **retired network**. They
+will connect to nothing and fail with `0/5 peers responded` — this does not mean
+the network is empty, it means you are on the wrong one.
+
+| Use these | Not these |
+|---|---|
+| `service-node`, `miner-v2` | `node`, `relay`, `miner`, `mine` |
+
+Anything marked `(DevnetV2)` in `--help` is correct.
+
+---
+
 ## Run a node
 
 A node follows the chain, stores blocks and relays them to other peers. It does
@@ -144,6 +158,26 @@ curl -s http://127.0.0.1:18546/health
 - `blocks_mined` rising → you are winning blocks.
 - `miner_wait_blocks_graft` in the logs → still waiting for the gossip mesh,
   this is normal during the first minute.
+
+## Troubleshooting
+
+**`observe_peers: only 0/5 peers responded` / `Timed out waiting for sync`**
+
+You are running a legacy command. Those target the retired network on port 9333
+and will never find peers, however many nodes are online. Use `service-node` or
+`miner-v2` instead — see the warning at the top of this page.
+
+**`miner_wait_blocks_graft ... grafted=0`**
+
+The miner is waiting to be grafted onto the `blocks` gossip topic before
+producing, so it never mines a block into the void. It normally clears within a
+minute. If it persists after a restart, check that outbound TCP to port 9433 on
+the seed addresses is not blocked.
+
+**Sync appears stuck at height 0 for several minutes**
+
+Normal: the node opens and validates its database before serving HTTP. Full sync
+from genesis takes about 10 minutes.
 
 Mining is CPU-based. Use `-t <N>` to set the number of threads.
 
